@@ -1,0 +1,1 @@
+DATABASES['default']['NAME'] = 'bijoe'

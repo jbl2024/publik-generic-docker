@@ -1,0 +1,84 @@
+version: '3'
+services:
+  publik:
+    build:
+      context: .
+    ports:
+        - "80:80"
+    extra_hosts:
+      combo.localhost:
+        127.0.0.1
+      agent-combo.localhost:
+        127.0.0.1
+      chrono.localhost:
+        127.0.0.1
+      authentic.localhost:
+        127.0.0.1
+      wcs.localhost:
+        127.0.0.1
+      fargo.localhost:
+        127.0.0.1
+      passerelle.localhost:
+        127.0.0.1
+      hobo.localhost:
+        127.0.0.1
+      bijoe.localhost:
+        127.0.0.1
+    volumes:
+      - ./mount/local:/apps/settings
+      - publik-lib-data-wcs:/var/lib/wcs
+      - publik-lib-data-hobo:/var/lib/hobo
+      - publik-lib-data-bijoe:/var/lib/bijoe
+      - publik-lib-data-chrono:/var/lib/chrono
+      - publik-lib-data-combo:/var/lib/combo
+      - publik-lib-data-fargo:/var/lib/fargo
+      - publik-lib-data-authentic2-multitenant:/var/lib/authentic2-multitenant
+      - publik-lib-data-passerelle:/var/lib/passerelle
+    environment: 
+      DB_USERNAME: wcs
+      DB_PASSWORD: password
+      DB_HOST: database
+      DB_PORT: 5432
+    command: /bin/sh -c "sleep 10 ; /run.sh"
+    depends_on:
+      - database
+      - rabbitmq
+  rabbitmq:
+    image: rabbitmq
+  database:
+    build:
+      context: ./postgres
+    volumes:
+      - ./data/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d/
+      - publik-db-data:/var/lib/postgresql/data         
+    environment:
+      - "POSTGRES_PASSWORD=password"
+  memcached:
+    image: memcached
+  maildev:
+    image: djfarrelly/maildev
+    ports:
+      - "1080:80"
+      - "1025:25"
+  adminer:
+    image: adminer
+    depends_on:
+      - database
+    environment:
+      ADMINER_DEFAULT_DB_DRIVER: pgsql
+      ADMINER_DEFAULT_DB_HOST: database
+      ADMINER_DESIGN: nette
+      ADMINER_PLUGINS: tables-filter tinymce
+    ports:
+      - "9000:8080"
+
+volumes:
+  publik-db-data:
+  publik-lib-data-wcs:
+  publik-lib-data-hobo:
+  publik-lib-data-bijoe:
+  publik-lib-data-chrono:
+  publik-lib-data-combo:
+  publik-lib-data-fargo:
+  publik-lib-data-authentic2-multitenant:
+  publik-lib-data-passerelle:

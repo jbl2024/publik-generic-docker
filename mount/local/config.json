@@ -1,0 +1,24 @@
+{
+    "branding": {
+        "theme": "publik"
+    },
+    "debug": {
+        "error_email": "admin@localhost"
+    },
+    "misc": {
+        "charset": "utf-8",
+        "homepage-redirect-url": "[portal_url]"
+    },
+    "postgresql": {
+        "createdb-connection-params": {
+            "database": "postgres",
+            "host": "database",
+            "user": "wcs",
+            "password": "password"
+        },
+        "database-template-name": "wcs_%s",
+        "host": "database",
+        "user": "wcs",
+        "password": "password"
+    }
+}

@@ -1,0 +1,276 @@
+
+server {
+        listen   80; ## listen for ipv4; this line is default and implied
+        #listen   [::]:80 default_server ipv6only=on; ## listen for ipv6
+
+        server_name wcs.localhost;
+        client_max_body_size 50M;
+
+        root /usr/share/nginx/www;
+        index index.html index.htm;
+
+        location ~ ^/static/(.+)$ {
+                root /;
+                try_files /var/lib/wcs/$host/static/$1
+                          /var/lib/wcs/$host/theme/static/$1
+                          /var/lib/wcs/collectstatic/$1
+                          =404;
+                add_header 'X-Content-Type-Options' 'nosniff';
+                add_header 'X-XSS-Protection' '1; mode=block';
+                add_header 'Content-Security-Policy' "default-src 'none'; style-src 'self' 'unsafe-inline'; object-src 'self' 'unsafe-inline';";
+        }
+
+        location /themes {
+            root /;
+            try_files /var/lib/wcs/$host$uri
+                      /usr/share/wcs/$uri
+                      =404;
+        }
+
+        location / {
+            proxy_pass         http://unix:/var/run/wcs/wcs.sock;
+            proxy_set_header   Host $http_host;
+            proxy_set_header   X-Real-IP       $remote_addr;
+            proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+
+
+        error_log /var/log/nginx/error-wcs.log warn;
+        access_log /var/log/nginx/access-wcs.log combined;
+
+}
+server {
+        listen   80;
+
+        location ~ ^/static/(.+)$ {
+            root /;
+            try_files /var/lib/combo/tenants/$host/static/$1
+                      /var/lib/combo/tenants/$host/theme/static/$1
+                      /var/lib/combo/collectstatic/$1
+                      =404;
+            add_header 'X-Content-Type-Options' 'nosniff';
+            add_header 'X-XSS-Protection' '1; mode=block';
+            add_header Access-Control-Allow-Origin *;
+            add_header 'Content-Security-Policy' "default-src 'none'; style-src 'self' 'unsafe-inline'; object-src 'self' 'unsafe-inline';";
+        }
+
+        location ~ ^/media/(.+)$ {
+            alias /var/lib/combo/tenants/$host/media/$1;
+            add_header 'X-Content-Type-Options' 'nosniff';
+            add_header 'X-XSS-Protection' '1; mode=block';
+            add_header 'Content-Security-Policy' "default-src 'none'; style-src 'self' 'unsafe-inline'; object-src 'self' 'unsafe-inline';";
+        }
+
+        server_name combo.localhost;
+        client_max_body_size 50M;
+
+        location / {
+            proxy_pass         http://unix:/var/run/combo/combo.sock;
+            proxy_set_header   Host $http_host;
+            proxy_set_header   X-Real-IP       $remote_addr;
+            proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+
+        error_log /var/log/nginx/error-combo.log warn;
+        access_log /var/log/nginx/access-combo.log combined;
+}
+server {
+        listen   80;
+
+        location ~ ^/static/(.+)$ {
+            root /;
+            try_files /var/lib/combo/tenants/$host/static/$1
+                      /var/lib/combo/tenants/$host/theme/static/$1
+                      /var/lib/combo/collectstatic/$1
+                      =404;
+            add_header 'X-Content-Type-Options' 'nosniff';
+            add_header 'X-XSS-Protection' '1; mode=block';
+            add_header 'Content-Security-Policy' "default-src 'none'; style-src 'self' 'unsafe-inline'; object-src 'self' 'unsafe-inline';";
+        }
+
+        location ~ ^/media/(.+)$ {
+            alias /var/lib/combo/tenants/$host/media/$1;
+            add_header 'X-Content-Type-Options' 'nosniff';
+            add_header 'X-XSS-Protection' '1; mode=block';
+            add_header 'Content-Security-Policy' "default-src 'none'; style-src 'self' 'unsafe-inline'; object-src 'self' 'unsafe-inline';";
+        }
+
+        server_name agent-combo.localhost;
+        client_max_body_size 50M;
+
+        location / {
+            proxy_pass         http://unix:/var/run/combo/combo.sock;
+            proxy_set_header   Host $http_host;
+            proxy_set_header   X-Real-IP       $remote_addr;
+            proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+
+        error_log /var/log/nginx/error-agent-combo.log warn;
+        access_log /var/log/nginx/access-agent-combo.log combined;
+}
+
+server {
+        listen   80;
+
+        server_name authentic.localhost;
+        client_max_body_size 50M;
+
+        location ~ ^/static/(.+)$ {
+            root /;
+            try_files /var/lib/authentic2-multitenant/static/$1
+                      /var/lib/authentic2-multitenant/collectstatic/$1
+                      =404;
+            add_header 'X-Content-Type-Options' 'nosniff';
+            add_header 'X-XSS-Protection' '1; mode=block';
+            add_header 'Content-Security-Policy' "default-src 'none'; style-src 'self' 'unsafe-inline'; object-src 'self' 'unsafe-inline';";
+        }
+
+        location / {
+            rewrite            ^/accounts/saml/login/ /accounts/fedict/login/ last;
+            proxy_pass         http://unix:/run/authentic2-multitenant/authentic2-multitenant.sock;
+            proxy_set_header   Host $http_host;
+            proxy_set_header   X-Real-IP       $remote_addr;
+            proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+        error_log /var/log/nginx/error-authentic.log warn;
+        access_log /var/log/nginx/access-authentic.log combined;
+}
+server {
+        listen   80;
+
+        server_name fargo.localhost;
+        client_max_body_size 50M;
+
+        location ~ ^/static/(.+)$ {
+            root /;
+            try_files /var/lib/fargo/static/$1
+                      /var/lib/fargo/collectstatic/$1
+                      =404;
+            add_header 'X-Content-Type-Options' 'nosniff';
+            add_header 'X-XSS-Protection' '1; mode=block';
+            add_header 'Content-Security-Policy' "default-src 'none'; style-src 'self' 'unsafe-inline'; object-src 'self' 'unsafe-inline';";
+        }
+
+        location / {
+            proxy_pass         http://unix:/var/run/fargo/fargo.sock;
+            proxy_set_header   Host $http_host;
+            proxy_set_header   X-Real-IP       $remote_addr;
+            proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+        error_log /var/log/nginx/error-fargo.log warn;
+        access_log /var/log/nginx/access-fargo.log combined;
+}
+server {
+        listen   80;
+
+        server_name passerelle.localhost;
+        client_max_body_size 50M;
+
+        location ~ ^/static/(.+)$ {
+            root /;
+            try_files /var/lib/passerelle/static/$1
+                      /var/lib/passerelle/theme/static/$1
+                      /var/lib/passerelle/collectstatic/$1
+                      =404;
+            add_header 'X-Content-Type-Options' 'nosniff';
+            add_header 'X-XSS-Protection' '1; mode=block';
+            add_header 'Content-Security-Policy' "default-src 'none'; style-src 'self' 'unsafe-inline'; object-src 'self' 'unsafe-inline';";
+        }
+
+        location / {
+            proxy_pass         http://unix:/var/run/passerelle/passerelle.sock;
+            proxy_set_header   Host $http_host;
+            proxy_set_header   X-Real-IP       $remote_addr;
+            proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+        error_log /var/log/nginx/error-passerelle.log warn;
+        access_log /var/log/nginx/access-passerelle.log combined;
+}
+
+server {
+        listen   80;
+
+        server_name hobo.localhost;
+        client_max_body_size 50M;
+
+        location ~ ^/static/(.+)$ {
+            root /;
+            try_files /var/lib/hobo/static/$1
+                      /var/lib/hobo/theme/static/$1
+                      /var/lib/hobo/collectstatic/$1
+                      =404;
+            add_header 'X-Content-Type-Options' 'nosniff';
+            add_header 'X-XSS-Protection' '1; mode=block';
+            add_header 'Content-Security-Policy' "default-src 'none'; style-src 'self' 'unsafe-inline'; object-src 'self' 'unsafe-inline';";
+        }
+
+        location / {
+            proxy_pass         http://unix:/var/run/hobo/hobo.sock;
+            proxy_set_header   Host $http_host;
+            proxy_set_header   X-Real-IP       $remote_addr;
+            proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+        error_log /var/log/nginx/error-hobo.log warn;
+        access_log /var/log/nginx/access-hobo.log combined;
+}
+
+server {
+        listen   80;
+
+        server_name chrono.localhost;
+        client_max_body_size 50M;
+
+        location ~ ^/static/(.+)$ {
+            root /;
+            try_files /var/lib/chrono/static/$1
+                      /var/lib/chrono/theme/static/$1
+                      /var/lib/chrono/collectstatic/$1
+                      =404;
+            add_header 'X-Content-Type-Options' 'nosniff';
+            add_header 'X-XSS-Protection' '1; mode=block';
+            add_header 'Content-Security-Policy' "default-src 'none'; style-src 'self' 'unsafe-inline'; object-src 'self' 'unsafe-inline';";
+        }
+
+        location / {
+            proxy_pass         http://unix:/var/run/chrono/chrono.sock;
+            proxy_set_header   Host $http_host;
+            proxy_set_header   X-Real-IP       $remote_addr;
+            proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+        error_log /var/log/nginx/error-agendas.log warn;
+        access_log /var/log/nginx/access-agendas.log combined;
+}
+
+server {
+        listen   80;
+
+        server_name bijoe.localhost;
+        client_max_body_size 50M;
+
+        location ~ ^/static/(.+)$ {
+            root /;
+            try_files /var/lib/bijoe/tenants/$host/static/$1
+                      /var/lib/bijoe/tenants/$host/theme/static/$1
+                      /var/lib/bijoe/collectstatic/$1
+                      =404;
+            add_header 'X-Content-Type-Options' 'nosniff';
+            add_header 'X-XSS-Protection' '1; mode=block';
+            add_header 'Content-Security-Policy' "default-src 'none'; style-src 'self' 'unsafe-inline'; object-src 'self' 'unsafe-inline';";
+        }
+
+        location ~ ^/static/pdf/(.+)$ {
+            alias /usr/share/javascript/pdf/$1;
+            add_header 'X-Content-Type-Options' 'nosniff';
+            add_header 'X-XSS-Protection' '1; mode=block';
+            add_header 'Content-Security-Policy' "default-src 'none'; style-src 'self' 'unsafe-inline'; object-src 'self' 'unsafe-inline';";
+        }
+
+        location / {
+            proxy_pass         http://unix:/var/run/bijoe/bijoe.sock;
+            proxy_set_header   Host $http_host;
+            proxy_set_header   X-Real-IP       $remote_addr;
+            proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+        error_log /var/log/nginx/error-bijoe.log warn;
+        access_log /var/log/nginx/access-bijoe.log combined;
+}

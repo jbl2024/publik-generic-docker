@@ -1,0 +1,63 @@
+{
+  "variables": {
+    "hobo": "hobo.localhost",
+    "authentic": "authentic.localhost",
+    "chrono": "chrono.localhost",
+    "combo": "combo.localhost",
+    "combo_agent": "agent-combo.localhost",
+    "fargo": "fargo.localhost",
+    "passerelle": "passerelle.localhost",
+    "wcs": "wcs.localhost",
+    "bijoe": "bijoe.localhost"
+  },
+  "steps": [
+    {"create-hobo": {
+      "url": "http://${hobo}/"
+    }},
+    {"create-superuser": {
+      "email": "admin@localhost",
+      "password": "admin"
+    }},
+    {"create-authentic": {
+      "url": "http://${authentic}/",
+      "title": "Authentic"
+    }},
+    {"set-idp": {
+    }},
+    {"create-combo": {
+      "url": "http://${combo}/",
+      "title": "Portail usagers",
+      "template_name": "portal-user"
+    }},
+    {"create-combo": {
+      "url": "http://${combo_agent}/",
+      "slug": "portal-agent",
+      "title": "Portail agent",
+      "template_name": "portal-agent"
+    }},
+    {"create-fargo": {
+      "url": "http://${fargo}/",
+      "title": "Porte-documents"
+    }},
+    {"create-passerelle": {
+      "url": "http://${passerelle}/",
+      "title": "Passerelle"
+    }},
+    {"create-chrono": {
+      "url": "http://${chrono}/",
+      "title": "Agendas"
+    }},
+    {"create-wcs": {
+      "url": "http://${wcs}/",
+      "template_name": "publik.zip",
+      "title": "Formulaires"
+    }},
+    {"create-bijoe": {
+      "url": "http://${bijoe}/",
+      "title": "Statistiques"
+    }},
+    {"set-theme": {
+      "theme": "publik"
+    }}
+  ]
+}
