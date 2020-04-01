@@ -17,3 +17,8 @@ http://combo.localhost
 Login / pwd : admin@localhost / admin
 
 Note: no certificate/https available yet
+
+## Convenient tools
+
+- maildev: http://localhost:1080
+- adminer: http://localhost:9000
