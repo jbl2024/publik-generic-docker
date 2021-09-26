@@ -1,8 +1,6 @@
 #!/bin/bash
 python3 /opt/scripts/import_vars.py
-ln -sf /apps/settings/nginx /etc/nginx/sites-available/default
 ln -sf /apps/settings/recipe.json /etc/hobo/recipe.json
-ln -sf /apps/settings/hobo-agent.py /etc/hobo-agent/settings.d/00local.py
 ln -sf /apps/settings/ldap.py /etc/authentic2-multitenant/settings.d/00ldap.py
 
 ln -sf /apps/settings/common.py /etc/chrono/settings.d/00common.py

@@ -1,59 +1,59 @@
 {
   "variables": {
-    "hobo": "hobo.localhost",
-    "authentic": "authentic.localhost",
-    "chrono": "chrono.localhost",
-    "combo": "combo.localhost",
-    "combo_agent": "agent-combo.localhost",
-    "fargo": "fargo.localhost",
-    "passerelle": "passerelle.localhost",
-    "wcs": "wcs.localhost",
-    "bijoe": "bijoe.localhost"
+    "hobo": "hobo.dev.publik.love",
+    "authentic": "connexion.dev.publik.love",
+    "chrono": "agenda.dev.publik.love",
+    "combo": "portail.dev.publik.love",
+    "combo_agent": "agent.dev.publik.love",
+    "fargo": "portedoc.dev.publik.love",
+    "passerelle": "passerelle.dev.publik.love",
+    "wcs": "demarche.dev.publik.love",
+    "bijoe": "statistique.dev.publik.love"
   },
   "steps": [
     {"create-hobo": {
-      "url": "http://${hobo}/"
+      "url": "https://${hobo}/"
     }},
     {"create-superuser": {
       "email": "admin@localhost",
       "password": "admin"
     }},
     {"create-authentic": {
-      "url": "http://${authentic}/",
+      "url": "https://${authentic}/",
       "title": "Authentic"
     }},
     {"set-idp": {
     }},
     {"create-combo": {
-      "url": "http://${combo}/",
+      "url": "https://${combo}/",
       "title": "Portail usagers",
       "template_name": "portal-user"
     }},
     {"create-combo": {
-      "url": "http://${combo_agent}/",
+      "url": "https://${combo_agent}/",
       "slug": "portal-agent",
       "title": "Portail agent",
       "template_name": "portal-agent"
     }},
     {"create-fargo": {
-      "url": "http://${fargo}/",
+      "url": "https://${fargo}/",
       "title": "Porte-documents"
     }},
     {"create-passerelle": {
-      "url": "http://${passerelle}/",
+      "url": "https://${passerelle}/",
       "title": "Passerelle"
     }},
     {"create-chrono": {
-      "url": "http://${chrono}/",
+      "url": "https://${chrono}/",
       "title": "Agendas"
     }},
     {"create-wcs": {
-      "url": "http://${wcs}/",
+      "url": "https://${wcs}/",
       "template_name": "publik.zip",
       "title": "Formulaires"
     }},
     {"create-bijoe": {
-      "url": "http://${bijoe}/",
+      "url": "https://${bijoe}/",
       "title": "Statistiques"
     }},
     {"set-theme": {

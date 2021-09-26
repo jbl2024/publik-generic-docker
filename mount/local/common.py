@@ -60,5 +60,6 @@ CACHES = {
 # Rabbitmq
 BROKER_URL = 'amqp://guest:guest@rabbitmq:5672/'
 
+HOBO_HTTP_PROVISIONNING=True
 # Proxy
 import os

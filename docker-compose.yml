@@ -4,26 +4,7 @@ services:
     build:
       context: .
     ports:
-        - "80:80"
-    extra_hosts:
-      combo.localhost:
-        127.0.0.1
-      agent-combo.localhost:
-        127.0.0.1
-      chrono.localhost:
-        127.0.0.1
-      authentic.localhost:
-        127.0.0.1
-      wcs.localhost:
-        127.0.0.1
-      fargo.localhost:
-        127.0.0.1
-      passerelle.localhost:
-        127.0.0.1
-      hobo.localhost:
-        127.0.0.1
-      bijoe.localhost:
-        127.0.0.1
+        - "443:443"
     volumes:
       - ./mount/local:/apps/settings
       - publik-lib-data-wcs:/var/lib/wcs

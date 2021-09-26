@@ -1,4 +1,4 @@
-FROM debian:stretch
+FROM debian:buster
 ENV DEBIAN_FRONTEND noninteractive
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
 # Update Packages List
@@ -9,35 +9,62 @@ RUN chmod +x /usr/sbin/policy-rc.d
 
 # Install packages
 RUN apt-get update && apt-get upgrade -y
-RUN apt-get install -y nginx wget gnupg debian-archive-keyring rsyslog python-dns gettext vim.nox bash-completion libjs-jquery libreoffice cron lftp procps apt-transport-https ca-certificates rsync
+RUN apt-get install -y nginx \
+  wget \
+  gnupg \
+  debian-archive-keyring \
+  rsyslog \
+  python-dns \
+  gettext \
+  vim.nox \
+  bash-completion \
+  libjs-jquery \
+  libreoffice \
+  cron \
+  lftp \
+  procps \
+  apt-transport-https \
+  ca-certificates \
+  rsync \
+  ssl-cert \
+  curl
 
-RUN echo 'deb http://deb.debian.org/debian/ stretch-backports main' > /etc/apt/sources.list.d/backports.list
-RUN echo 'deb http://deb.entrouvert.org/ stretch main' > /etc/apt/sources.list.d/entrouvert.list
+RUN echo 'deb http://deb.debian.org/debian/ buster-backports main' > /etc/apt/sources.list.d/backports.list
+RUN echo 'deb http://deb.entrouvert.org/ buster main' > /etc/apt/sources.list.d/entrouvert.list
 RUN wget -O- https://deb.entrouvert.org/entrouvert.gpg | apt-key add -
 RUN apt update
-RUN yes | apt install -y entrouvert-repository
+RUN yes | apt install -o Dpkg::Options::="--force-confnew" entrouvert-repository
+RUN yes | apt install entrouvert-repository-hotfix
 RUN apt update
-RUN apt install -y publik-base-theme
-RUN apt install -y publik-common
-RUN apt install -y combo 
-RUN apt install -y wcs wcs-au-quotidien 
-RUN apt install -y fargo 
-RUN apt install -y hobo 
-RUN apt install -y bijoe 
-RUN apt install -y chrono 
-RUN apt install -y passerelle 
-RUN apt install -y hobo hobo-agent 
-RUN apt install -y authentic2-multitenant
-RUN apt install -y zip unzip
-RUN apt install -y python-raven
-RUN apt install -y python3-sentry-sdk
-RUN apt install -y python-configparser
+RUN apt install -y publik-base-theme \
+  publik-common \
+  combo \
+  wcs wcs-au-quotidien \
+  fargo \
+  hobo \
+  bijoe \
+  chrono \
+  passerelle \
+  hobo \
+  hobo-agent \
+  authentic2-multitenant \
+  zip \
+  unzip \
+  python3-sentry-sdk \
+  python-configparser \
+  poppler-utils \
+  python3-dns \
+  python3-docutils \
+  python3-langdetect \
+  python3-magic \
+  python3-qrcode \
+  python3-workalendar
+
 
 # Allow services to start, this is necessary as hobo-agent postinst will fail
 # if supervisord is not running
 RUN echo "#!/bin/sh\nexit 0" > /usr/sbin/policy-rc.d
 RUN echo "server_names_hash_bucket_size 128;" > /etc/nginx/conf.d/server_names.conf
-RUN apt-get install -y -t stretch hobo-agent
 
 # Cleanup
 RUN apt-get -y remove python-dev && apt-get -y autoremove
@@ -69,6 +96,17 @@ ADD ./config/wcs/settings.d /etc/wcs/settings.d
 ADD ./scripts /opt/scripts
 
 ADD ./connectors /opt/connectors
+
+RUN cp /usr/share/doc/publik-common/nginx/conf.d/* /etc/nginx/conf.d/
+RUN cp -r /usr/share/doc/publik-common/nginx/sites-available/* /etc/nginx/sites-enabled/
+RUN rm /etc/nginx/sites-enabled/default
+
+RUN curl https://doc-publik.entrouvert.com/media/certificates/dev.publik.love/fullchain.pem > /etc/ssl/certs/publik-fullchain.pem
+RUN curl https://doc-publik.entrouvert.com/media/certificates/dev.publik.love/privkey.pem > /etc/ssl/private/publik-privkey.pem
+WORKDIR /etc/nginx/sites-enabled/
+RUN find . -exec sed -i 's/ssl-cert-snakeoil.pem/publik-fullchain.pem/g' {} \;
+RUN find . -exec sed -i 's/ssl-cert-snakeoil.key/publik-privkey.pem/g' {} \;
+RUN openssl dhparam -out /etc/ssl/dhparam2048.pem 2048
 
 EXPOSE 80
 # Run
