@@ -5,10 +5,8 @@
     "chrono": "agenda.dev.publik.love",
     "combo": "portail.dev.publik.love",
     "combo_agent": "agent.dev.publik.love",
-    "fargo": "portedoc.dev.publik.love",
     "passerelle": "passerelle.dev.publik.love",
-    "wcs": "demarche.dev.publik.love",
-    "bijoe": "statistique.dev.publik.love"
+    "wcs": "demarche.dev.publik.love"
   },
   "steps": [
     {"create-hobo": {
@@ -35,10 +33,6 @@
       "title": "Portail agent",
       "template_name": "portal-agent"
     }},
-    {"create-fargo": {
-      "url": "https://${fargo}/",
-      "title": "Porte-documents"
-    }},
     {"create-passerelle": {
       "url": "https://${passerelle}/",
       "title": "Passerelle"
@@ -51,10 +45,6 @@
       "url": "https://${wcs}/",
       "template_name": "publik.zip",
       "title": "Formulaires"
-    }},
-    {"create-bijoe": {
-      "url": "https://${bijoe}/",
-      "title": "Statistiques"
     }},
     {"set-theme": {
       "theme": "publik"

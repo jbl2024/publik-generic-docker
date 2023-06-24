@@ -1,8 +1,9 @@
-version: '3'
+version: '3.9'
 services:
   publik:
     build:
       context: .
+    platform: linux/amd64
     ports:
         - "443:443"
     volumes:

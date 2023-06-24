@@ -42,9 +42,6 @@ service authentic2-multitenant start
 service wcs start
 service passerelle start
 service hobo start
-service fargo start
-service bijoe update
-service bijoe start
 service chrono start
 service nginx start
 service supervisor start
