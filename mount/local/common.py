@@ -8,9 +8,9 @@ def get_var(key):
     return None
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-CSRF_COOKIE_SECURE = False
-SESSION_COOKIE_SECURE = False
+DEBUG = False
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 ADMINS = (
     ('Admins', 'admin@localhost'),
@@ -32,7 +32,7 @@ except:
 # ALLOWED_HOSTS must be correct in production!
 # See https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = [
-        '*',
+        '.mayday.services2.jbl2024.com',
 ]
 
 LANGUAGE_CODE = 'fr-fr'
