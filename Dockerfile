@@ -1,4 +1,4 @@
-FROM debian:buster
+FROM debian:bullseye
 ENV DEBIAN_FRONTEND noninteractive
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=DontWarn
 # Update Packages List
@@ -32,8 +32,8 @@ RUN apt-get update && apt-get upgrade -y && \
     unzip
 
 # Install EO packages
-RUN echo 'deb http://deb.debian.org/debian/ buster-backports main' > /etc/apt/sources.list.d/backports.list && \
-    echo 'deb http://deb.entrouvert.org/ buster main' > /etc/apt/sources.list.d/entrouvert.list && \
+RUN echo 'deb http://deb.debian.org/debian/ bullseye-backports main' > /etc/apt/sources.list.d/backports.list && \
+    echo 'deb http://deb.entrouvert.org/ bullseye main' > /etc/apt/sources.list.d/entrouvert.list && \
     curl https://deb.entrouvert.org/entrouvert.gpg | sudo tee -a /etc/apt/trusted.gpg.d/entrouvert.gpg && \
     apt update && \
     yes | apt install -o Dpkg::Options::="--force-confnew" entrouvert-repository && \
@@ -41,7 +41,6 @@ RUN echo 'deb http://deb.debian.org/debian/ buster-backports main' > /etc/apt/so
     apt update && \
     apt install -y \  
     python3-sentry-sdk \
-    python-configparser \
     poppler-utils \
     python3-dns \
     python3-docutils \
