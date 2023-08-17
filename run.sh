@@ -36,6 +36,7 @@ chown wcs:wcs /var/lib/wcs -R
 service rsyslog start
 service cron start
 
+service memcached start
 service combo start
 service authentic2-multitenant update
 service authentic2-multitenant start
